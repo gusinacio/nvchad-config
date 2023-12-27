@@ -10,8 +10,11 @@ local servers = {
   "tsserver",
   "terraformls",
   "gopls",
+  "prismals",
   -- "rust_analyzer",
   "solidity_ls_nomicfoundation",
+  "svelte",
+  "graphql"
 }
 
 for _, lsp in ipairs(servers) do
@@ -20,3 +23,4 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+

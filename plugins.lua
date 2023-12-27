@@ -3,7 +3,10 @@ local overrides = require "custom.configs.overrides"
 
 ---@type NvPluginSpec[]
 local plugins = {
-
+  {
+    "nkrkv/nvim-treesitter-rescript",
+    lazy = false,
+  },
   -- Override plugin definition options
   {
     "kylechui/nvim-surround",
@@ -28,19 +31,20 @@ local plugins = {
     dependencies = {
       -- format & linting
       {
-        "jose-elias-alvarez/null-ls.nvim",
+        "stevearc/conform.nvim",
         config = function()
-          require "custom.configs.null-ls"
+          require "custom.configs.conform"
         end,
       },
-      {
-        "jay-babu/mason-null-ls.nvim",
-        opts = {
-          ensure_installed = {
-            "solhint",
-          },
-        },
-      },
+      -- {
+      --   "jay-babu/mason-null-ls.nvim",
+      --   opts = {
+      --     ensure_installed = {
+      --       "solhint",
+      --       "terraform_fmt",
+      --     },
+      --   },
+      -- },
     },
     config = function()
       require "plugins.configs.lspconfig"
@@ -113,7 +117,8 @@ local plugins = {
   --   end,
   -- },
   "ray-x/go.nvim",
-  "jose-elias-alvarez/typescript.nvim", -- add lsp plugin
+  "stevearc/conform.nvim", -- add lsp plugin
+  -- "folke/neodev.nvim",
 
   -- To make a plugin not be loaded
   -- {
@@ -220,6 +225,21 @@ local plugins = {
     opts = {
       -- add any custom options here
     },
+  },
+  {
+    "nathom/filetype.nvim",
+    config = function()
+      require("filetype").setup {
+        overrides = {
+          extensions = {
+            hcl = "terraform",
+            tf = "terraform",
+            tfvars = "terraform",
+            tfstate = "json",
+          },
+        },
+      }
+    end,
   },
 }
 

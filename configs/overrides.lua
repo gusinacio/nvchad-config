@@ -12,7 +12,11 @@ M.treesitter = {
     "markdown",
     "markdown_inline",
     "rust",
-    "go"
+    "go",
+    "terraform",
+    "hcl",
+    "prisma",
+    "svelte",
   },
   indent = {
     enable = true,
@@ -32,12 +36,16 @@ M.mason = {
     "css-lsp",
     "html-lsp",
     "typescript-language-server",
+    "svelte-language-server",
+    "prisma-language-server",
     "deno",
     "prettier",
+    "rescriptls",
 
-    -- c/cpp stuff
     "rust-analyzer",
     "gopls",
+    "terraform-ls",
+    "taplo",
   },
 }
 
@@ -46,9 +54,10 @@ M.nvimtree = {
   view = {
     side = "right",
   },
-  -- git = {
-  --   enable = true,
-  -- },
+
+  git = {
+    enable = true,
+  },
   --
   -- renderer = {
   --   highlight_git = true,

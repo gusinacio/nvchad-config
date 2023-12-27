@@ -3,6 +3,11 @@ local M = {}
 
 M.general = {
   n = {
+    ["gi"] = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Goto implementation" },
+    -- ["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Goto declaration" },
+    ["gt"] = { "<cmd>lua vim.lsp.buf.type_definition()<CR>", "Goto type definition" },
+    ["|"] = { "<cmd>vsplit<cr>", "Vertical Split" },
+    ["\\"] = { "<cmd>split<cr>", "Horizontal Split" },
     ["<leader>x"] = { "" },
     ["<leader>ca"] = { "" },
     ["<leader>cm"] = { "" },
@@ -52,7 +57,8 @@ M.general = {
     },
     ["<leader>lf"] = {
       function()
-        vim.lsp.buf.format { async = true }
+        require("conform").format()
+        -- vim.lsp.buf.format { async = true }
       end,
       "Format file",
     },
