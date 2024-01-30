@@ -24,9 +24,8 @@ M.general = {
       end,
       "Close other buffers",
     },
-    ["<S-tab>"] = { "" },
-    ["]b"] = {
-      function()
+    -- ["<S-tab>"] = { "" },
+    ["]b"] = { function()
         require("nvchad.tabufline").tabuflineNext()
       end,
       "Goto next buffer",
