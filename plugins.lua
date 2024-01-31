@@ -99,21 +99,99 @@ local plugins = {
     end,
   },
   {
-    "simrat39/rust-tools.nvim",
+    "mrcjkb/rustaceanvim",
+    version = "^4", -- Recommended
     ft = "rust",
     opts = function()
-      return require "custom.configs.rust-tools"
+      return require "custom.configs.rustaceanvim"
     end,
     config = function(_, opts)
-      require("rust-tools").setup(opts)
+      vim.g.rustaceanvim = opts
     end,
-    dependencies = "neovim/nvim-lspconfig",
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      "mfussenegger/nvim-dap",
+    },
   }, -- add lsp plugin
+
   -- {
-  --   "rust-lang/rust.vim",
-  --   ft = "rust",
-  --   init = function()
-  --     vim.g.rustfmt_autosave = 1
+  --   "simrat39/inlay-hints.nvim",
+  --   lazy = true,
+  --   event = "LspAttach",
+  --   opts = {},
+  --   config = function(_, opts)
+  --     require("inlay-hints").setup(opts)
+  --   end,
+  -- },
+  {
+    "lvimuser/lsp-inlayhints.nvim",
+    lazy = true,
+    event = "LspAttach",
+    init = function()
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("LspAttach_inlayhints", {}),
+        callback = function(args)
+          if not (args.data and args.data.client_id) then
+            return
+          end
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          require("lsp-inlayhints").on_attach(client, args.buf)
+        end,
+      })
+    end,
+    config = function(_, opts)
+      require("lsp-inlayhints").setup(opts)
+      vim.cmd [[highlight LspInlayHint guifg=#d8d8d8 guibg=#3a3a3a]]
+    end,
+  },
+  {
+    "mfussenegger/nvim-dap",
+    -- config = function()
+    --   require("dap.ext.vscode").load_launchjs(".nvim/launch.json", { lldb = { "rust" } })
+    -- end,
+  },
+  {
+    "rcarriga/nvim-dap-ui",
+    after = "nvim-dap",
+    lazy = false,
+    config = function()
+      require("dapui").setup()
+      local dap, dapui = require "dap", require "dapui"
+      dap.listeners.before.attach.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.launch.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated.dapui_config = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited.dapui_config = function()
+        dapui.close()
+      end
+    end,
+  },
+  -- {
+  --   "lvimuser/lsp-inlayhints.nvim",
+  --   -- event = "LspAttach",
+  --   -- on_attach = function(client, bufnr)
+  --   --       require("lsp-inlayhints").on_attach(client, bufnr)
+  --   -- end,
+  --   config = function()
+  --     require("lsp-inlayhints").setup()
+  --     vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
+  --     vim.api.nvim_create_autocmd("LspAttach", {
+  --       group = "LspAttach_inlayhints",
+  --       callback = function(args)
+  --         if not (args.data and args.data.client_id) then
+  --           return
+  --         end
+  --
+  --         local bufnr = args.buf
+  --         local client = vim.lsp.get_client_by_id(args.data.client_id)
+  --         require("lsp-inlayhints").on_attach(client, bufnr)
+  --       end,
+  --     })
   --   end,
   -- },
   "ray-x/go.nvim",

@@ -3,6 +3,25 @@ local M = {}
 
 M.general = {
   n = {
+    ["<F5>"] = {
+      function()
+        -- (Re-)reads launch.json if present
+        if vim.fn.filereadable ".nvim/launch.json" then
+          require("dap.ext.vscode").load_launchjs(".nvim/launch.json", { lldb = { "rust" } })
+        end
+        require("dap").continue()
+      end,
+      "DAP Continue",
+    },
+    ["<leader>db"] = { "<cmd> DapToggleBreakpoint <CR>", "Toggle Breakpoint" },
+    ["<leader>dt"] = {
+      function()
+        local dapui = require "dapui"
+        dapui.toggle()
+      end,
+      "Open debugging sidebar",
+    },
+
     ["gi"] = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Goto implementation" },
     -- ["gD"] = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Goto declaration" },
     ["gt"] = { "<cmd>lua vim.lsp.buf.type_definition()<CR>", "Goto type definition" },
@@ -25,7 +44,8 @@ M.general = {
       "Close other buffers",
     },
     -- ["<S-tab>"] = { "" },
-    ["]b"] = { function()
+    ["]b"] = {
+      function()
         require("nvchad.tabufline").tabuflineNext()
       end,
       "Goto next buffer",

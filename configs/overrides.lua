@@ -46,6 +46,7 @@ M.mason = {
     "gopls",
     "terraform-ls",
     "taplo",
+    "codelldb",
   },
 }
 
