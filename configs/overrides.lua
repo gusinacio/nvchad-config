@@ -17,6 +17,10 @@ M.treesitter = {
     "hcl",
     "prisma",
     "svelte",
+    "v",
+    "gleam",
+    "elixir",
+    "dockerfile",
   },
   indent = {
     enable = true,
@@ -40,13 +44,16 @@ M.mason = {
     "prisma-language-server",
     "deno",
     "prettier",
-    "rescriptls",
 
     "rust-analyzer",
     "gopls",
     "terraform-ls",
+    "elixir-ls",
     "taplo",
     "codelldb",
+
+    "grammarly-languageserver",
+    "marksman",
   },
 }
 

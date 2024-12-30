@@ -6,12 +6,15 @@ local highlights = require "custom.highlights"
 
 M.ui = {
   theme = "catppuccin",
+
   theme_toggle = { "catppuccin", "one_light" },
 
   hl_override = highlights.override,
   hl_add = highlights.add,
-  transparency = false,
+  transparency = true,
 }
+
+vim.highlight.priorities.semantic_tokens = 95
 
 M.plugins = "custom.plugins"
 

@@ -3,6 +3,11 @@ local M = {}
 
 M.general = {
   n = {
+    ["gr"] = {
+      function()
+        require("telescope.builtin").lsp_references()
+      end,
+    },
     ["<F5>"] = {
       function()
         -- (Re-)reads launch.json if present
@@ -68,6 +73,7 @@ M.general = {
       "Save file",
     },
     ["<leader>e"] = { "<cmd> NvimTreeToggle <CR>", "Toggle nvimtree" },
+    -- ["<leader>e"] = { "<cmd> Oil <CR>", "Toggle oil" },
     ["<leader>la"] = {
       function()
         vim.lsp.buf.code_action()

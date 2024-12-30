@@ -36,6 +36,13 @@ local plugins = {
           require "custom.configs.conform"
         end,
       },
+
+      {
+        "folke/neoconf.nvim",
+        config = function()
+          require("neoconf").setup()
+        end,
+      },
       -- {
       --   "jay-babu/mason-null-ls.nvim",
       --   opts = {
@@ -171,6 +178,22 @@ local plugins = {
       end
     end,
   },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-neotest/nvim-nio",
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+    },
+  },
+  {
+    "Pocco81/auto-save.nvim",
+    event = "UIEnter",
+    config = function()
+      require("auto-save").setup {}
+    end,
+  },
   -- {
   --   "lvimuser/lsp-inlayhints.nvim",
   --   -- event = "LspAttach",
@@ -200,8 +223,8 @@ local plugins = {
 
   -- To make a plugin not be loaded
   -- {
-  --   "NvChad/nvim-colorizer.lua",
-  --   enabled = false
+  --   "nvim-tree/nvim-tree.lua",
+  --   enabled = false,
   -- },
 
   -- All NvChad plugins are lazy-loaded by default
@@ -211,88 +234,103 @@ local plugins = {
   --   "mg979/vim-visual-multi",
   --   lazy = false,
   -- }
+  -- {
+  --   "supermaven-inc/supermaven-nvim",
+  --   event = "UIEnter",
+  --   config = function()
+  --     require("supermaven-nvim").setup {
+  --       disable_inline_completion = false,
+  --     }
+  --   end,
+  -- },
 
-  {
-    "zbirenbaum/copilot.lua",
-    event = "UIEnter",
-    dependencies = {
-      "zbirenbaum/copilot-cmp",
-    },
-    config = function()
-      require("copilot").setup {
-        suggestion = { enabled = false },
-        panel = { enabled = false },
-      }
-    end,
-  },
-  {
-    "zbirenbaum/copilot-cmp",
-    config = function(_, _)
-      local copilot_cmp = require "copilot_cmp"
-      local opts = {
-        formatters = {
-          label = require("copilot_cmp.format").format_label_text,
-          insert_text = require("copilot_cmp.format").format_insert_text,
-          preview = require("copilot_cmp.format").deindent,
-        },
-      }
-      copilot_cmp.setup(opts)
-    end,
-  },
+  -- {
+  --   "zbirenbaum/copilot.lua",
+  --   event = "UIEnter",
+  --   dependencies = {
+  --     "zbirenbaum/copilot-cmp",
+  --   },
+  --   config = function()
+  --     require("copilot").setup {
+  --       suggestion = { enabled = false },
+  --       panel = { enabled = false },
+  --     }
+  --   end,
+  -- },
+  -- {
+  --   "zbirenbaum/copilot-cmp",
+  --   config = function(_, _)
+  --     local copilot_cmp = require "copilot_cmp"
+  --     local opts = {
+  --       formatters = {
+  --         label = require("copilot_cmp.format").format_label_text,
+  --         insert_text = require("copilot_cmp.format").format_insert_text,
+  --         preview = require("copilot_cmp.format").deindent,
+  --       },
+  --     }
+  --     copilot_cmp.setup(opts)
+  --   end,
+  -- },
 
   {
     "hrsh7th/nvim-cmp",
     commit = "935b4069ce73b60ba9075bf05ee6ab50ed3af1a9",
     dependencies = { "zbirenbaum/copilot.lua" },
     opts = function(_, opts)
-      local cmp, copilot = require "cmp", require "copilot.suggestion"
+      local cmp= require "cmp"
+      opts.mapping["<Down>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select }
+      opts.mapping["<Up>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select }
+
       -- local function has_words_before()
       --   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
       --   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
       -- end
-      if not opts.mapping then
-        opts.mapping = {}
-      end
-      opts.mapping["<Up>"] = vim.schedule_wrap(function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
-        else
-          fallback()
-        end
-      end)
-      opts.mapping["<Down>"] = vim.schedule_wrap(function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
-        else
-          fallback()
-        end
-      end)
-      opts.mapping["<C-Space>"] = cmp.mapping {
-        i = cmp.mapping.complete(),
-      }
-      opts.mapping["<C-e>"] = cmp.mapping {
-        i = function(fallback)
-          if copilot.is_visible() then
-            copilot.dismiss()
-          elseif not cmp.abort() then
-            fallback()
-          end
-        end,
-        c = function(fallback)
-          if copilot.is_visible() then
-            copilot.dismiss()
-          elseif not cmp.close() then
-            fallback()
-          end
-        end,
-      }
+      -- if not opts.mapping then
+      --   opts.mapping = {}
+      -- end
+      -- opts.mapping["<Up>"] = vim.schedule_wrap(function(fallback)
+      --   if cmp.visible() then
+      --     cmp.select_prev_item { behavior = cmp.SelectBehavior.Select }
+      --   else
+      --     fallback()
+      --   end
+      -- end)
+      -- opts.mapping["<Down>"] = vim.schedule_wrap(function(fallback)
+      --   if cmp.visible() then
+      --     cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+      --   else
+      --     fallback()
+      --   end
+      -- end)
+      -- opts.mapping["<C-Space>"] = cmp.mapping {
+      --   i = cmp.mapping.complete(),
+      -- }
+      -- opts.mapping["<C-e>"] = cmp.mapping {
+      --   i = function(fallback)
+      --     if copilot.is_visible() then
+      --       copilot.dismiss()
+      --     elseif not cmp.abort() then
+      --       fallback()
+      --     end
+      --   end,
+      --   c = function(fallback)
+      --     if copilot.is_visible() then
+      --       copilot.dismiss()
+      --     elseif not cmp.close() then
+      --       fallback()
+      --     end
+      --   end,
+      -- }
+
       opts.sources = {
         { name = "nvim_lsp", priority = 1000, group_index = 2 },
-        { name = "copilot", priority = 950, group_index = 2 },
+        { name = "supermaven", priority = 950, group_index = 2 },
+        -- { name = "copilot", priority = 950, group_index = 2 },
         { name = "luasnip", priority = 750, group_index = 2 },
         { name = "buffer", priority = 500, group_index = 2 },
         { name = "path", priority = 250, group_index = 2 },
       }
+
 
       return opts
     end,
@@ -306,6 +344,7 @@ local plugins = {
   },
   {
     "nathom/filetype.nvim",
+    lazy = false,
     config = function()
       require("filetype").setup {
         overrides = {
@@ -314,10 +353,34 @@ local plugins = {
             tf = "terraform",
             tfvars = "terraform",
             tfstate = "json",
+            v = "v",
           },
         },
       }
     end,
+  },
+  -- {
+  --   "stevearc/oil.nvim",
+  --   opts = {},
+  --   lazy = false,
+  --   config = function()
+  --     require("oil").setup {
+  --       mappings = {
+  --         ["<leader>e"] = "actions.close",
+  --       },
+  --     }
+  --   end,
+  --   -- Optional dependencies
+  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  -- },
+  {
+    "luckasRanarison/tailwind-tools.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    opts = {
+      custom_filetypes = {
+        "gleam",
+      },
+    }, -- your configuration
   },
 }
 

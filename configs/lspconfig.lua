@@ -7,15 +7,27 @@ local lspconfig = require "lspconfig"
 local servers = {
   "html",
   "cssls",
-  "tsserver",
+  "marksman",
+  "ts_ls",
   "terraformls",
   "gopls",
   "prismals",
+  "v_analyzer",
+  "grammarly",
+  -- "denols",
   -- "rust_analyzer",
   "solidity_ls_nomicfoundation",
   "svelte",
-  "graphql"
+  "graphql",
+  "gleam",
+  -- "elixirls",
 }
+--
+-- lspconfig.elixirls.setup {
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+--   cmd = { "/opt/homebrew/bin/elixir-ls" },
+-- }
 
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
@@ -23,4 +35,3 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
-

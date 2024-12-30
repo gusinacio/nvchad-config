@@ -2,6 +2,7 @@ local conform = require "conform"
 
 local sources = {
   rust = { "rustfmt" },
+  gleam = { "gleam" },
   lua = { "stylua" },
   terraform = { "terraform_fmt" },
   hcl = { "terragrunt_hcl" },
@@ -11,6 +12,12 @@ local sources = {
   css = { "prettier" },
   typescript = { "prettier" },
   toml = { "taplo" },
+  v = { "vfmt" },
+}
+
+conform.formatters.vfmt = {
+  command = "v",
+  args = { "fmt" },
 }
 
 conform.formatters.terragrunt_hcl = {
